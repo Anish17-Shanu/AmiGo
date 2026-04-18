@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: amigo-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  analytics-service:
+    build:
+      context: ./analytics-service
+    container_name: amigo-analytics
+    env_file:
+      - ./analytics-service/.env.example
+    ports:
+      - "8000:8000"
+
+  server:
+    build:
+      context: ./server
+    container_name: amigo-server
+    env_file:
+      - ./server/.env.example
+    depends_on:
+      - mongodb
+      - analytics-service
+    ports:
+      - "5000:5000"
+
+  client:
+    build:
+      context: ./client
+    container_name: amigo-client
+    env_file:
+      - ./client/.env.example
+    depends_on:
+      - server
+    ports:
+      - "5173:5173"
+
+volumes:
+  mongo_data:
