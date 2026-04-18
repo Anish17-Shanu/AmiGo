@@ -1,5 +1,7 @@
 # AmiGo Architecture
 
+Creator: **Anish Kumar**
+
 ## Services
 
 1. `client` (React + Vite)

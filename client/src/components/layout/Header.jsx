@@ -7,9 +7,14 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <Link to="/" className="font-display text-2xl font-extrabold text-ink">
-          Ami<span className="text-ember">Go</span>
-        </Link>
+        <div className="flex flex-col">
+          <Link to="/" className="font-display text-2xl font-extrabold text-ink">
+            Ami<span className="text-ember">Go</span>
+          </Link>
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+            Created by Anish Kumar
+          </span>
+        </div>
         <nav className="flex items-center gap-4 text-sm font-semibold">
           <NavLink to="/" className="text-slate-700">Shop</NavLink>
           {user && <NavLink to="/orders" className="text-slate-700">Orders</NavLink>}

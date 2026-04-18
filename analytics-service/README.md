@@ -1,5 +1,7 @@
 # Analytics Service
 
+Maintainer/Creator: **Anish Kumar**
+
 ## Setup
 
 1. Create virtualenv and activate.

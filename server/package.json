@@ -2,6 +2,7 @@
   "name": "amigo-server",
   "version": "1.0.0",
   "description": "AmiGo backend service",
+  "author": "Anish Kumar",
   "main": "src/server.js",
   "type": "module",
   "scripts": {

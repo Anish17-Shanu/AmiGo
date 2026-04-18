@@ -1,5 +1,7 @@
 # Client Service
 
+Maintainer/Creator: **Anish Kumar**
+
 ## Setup
 
 1. `cp .env.example .env`
