@@ -138,14 +138,14 @@ Open `http://localhost:5173`.
 - Admin: `admin@amigo.com` / `Admin@123`
 - User: `user@amigo.com` / `User@123`
 
-The backend bootstraps these accounts and six demo products when the database is empty. An explicit seed command is also available:
+The backend bootstraps a full demo dataset when the database is empty and `SEED_DEMO_DATA` is enabled: 24 products, 11 users, and 60 orders spread across 28 days so dashboards, forecasts, and segments look realistic. An explicit reset/seed command is also available:
 
 ```bash
 cd server
 npm run seed
 ```
 
-Change or remove demo credentials before exposing the app publicly.
+Set `SEED_DEMO_DATA=false` to start with an empty database. Change or remove demo credentials before exposing the app publicly.
 
 ## 8. Feature Coverage
 
@@ -168,9 +168,9 @@ Change or remove demo credentials before exposing the app publicly.
 
 ### Analytics
 
-- `/recommend`: content-based ranking with popularity fallback
-- `/forecast`: linear-regression forecast with empty/short-series fallbacks
-- `/segment`: K-Means customer segmentation
+- `/recommend`: hybrid content-based ranking (quantity-weighted TF-IDF) blended with popularity and diversified by category
+- `/forecast`: linear trend plus weekday seasonality, with gap filling and flat/empty fallbacks
+- `/segment`: standardized K-Means with silhouette-based cluster selection and human-readable segment labels
 - The backend degrades gracefully if this service is unavailable: dashboards return empty fallbacks instead of failing.
 
 ### Real-time

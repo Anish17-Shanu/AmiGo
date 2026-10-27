@@ -3,6 +3,8 @@ import { User } from "../models/User.js";
 import { Product } from "../models/Product.js";
 import { generateDescription } from "../services/descriptionGenerator.js";
 import { logger } from "../config/logger.js";
+import { env } from "../config/env.js";
+import { seedDemoData } from "./demoData.js";
 
 const defaultProducts = [
   { title: "AmiGo Smart Fitness Watch", category: "Electronics", price: 89, inventory: 100, tags: ["wearable", "health", "bluetooth"] },
@@ -16,6 +18,12 @@ const defaultProducts = [
 export const bootstrapDataIfEmpty = async () => {
   const userCount = await User.countDocuments();
   if (userCount > 0) return;
+
+  if (env.seedDemoData) {
+    const stats = await seedDemoData();
+    logger.info("Bootstrap demo dataset inserted", stats);
+    return;
+  }
 
   const adminPwd = await bcrypt.hash("Admin@123", 12);
   const userPwd = await bcrypt.hash("User@123", 12);

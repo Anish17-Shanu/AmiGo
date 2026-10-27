@@ -5,7 +5,7 @@ import { catchAsync } from "../utils/catchAsync.js";
 import { fetchRecommendations } from "../services/analyticsClient.js";
 
 export const personalizedRecommendations = catchAsync(async (req, res) => {
-  const orders = await Order.find({ user: req.user._id });
+  const orders = await Order.find({ user: req.user._id, status: { $ne: "cancelled" } });
   const products = await Product.find();
 
   const interactions = orders.flatMap((order) =>

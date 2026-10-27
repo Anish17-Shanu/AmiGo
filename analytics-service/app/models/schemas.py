@@ -24,6 +24,7 @@ class RecommendRequest(BaseModel):
     interactions: List[Interaction] = Field(default_factory=list, max_length=10000)
     products: List[ProductPayload] = Field(default_factory=list, max_length=5000)
     user_id: Optional[str] = None
+    top_n: int = Field(default=8, ge=1, le=20)
 
 
 class SalesPoint(BaseModel):
@@ -44,4 +45,4 @@ class CustomerPoint(BaseModel):
 
 class SegmentRequest(BaseModel):
     customers: List[CustomerPoint] = Field(default_factory=list, max_length=10000)
-    n_clusters: int = Field(default=3, ge=2, le=6)
+    n_clusters: Optional[int] = Field(default=None, ge=2, le=6)

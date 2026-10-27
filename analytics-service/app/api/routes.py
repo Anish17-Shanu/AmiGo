@@ -18,6 +18,7 @@ def recommend(payload: RecommendRequest):
         interactions=[i.model_dump() for i in payload.interactions],
         products=[p.model_dump() for p in payload.products],
         user_id=payload.user_id,
+        top_n=payload.top_n,
     )
 
 

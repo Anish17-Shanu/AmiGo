@@ -21,7 +21,11 @@ const InsightsPanel = ({ products }) => {
 
   const productById = new Map(products.map((product) => [product._id, product]));
   const recommendations = data?.recommendations?.recommendations || [];
+  const strategy = data?.recommendations?.strategy;
+  const recommendationScope = data?.recommendations?.scope;
   const segments = data?.segments?.segments || [];
+  const segmentSummary = data?.segments?.summary || [];
+  const clusterCount = data?.segments?.n_clusters;
   const segmentCounts = segments.reduce((counts, segment) => {
     const key = segment.segment;
     counts[key] = (counts[key] || 0) + 1;
@@ -33,7 +37,9 @@ const InsightsPanel = ({ products }) => {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h2 className="font-display text-xl font-bold">ML insights</h2>
-          <p className="text-xs text-slate-500">Recommendations and K-Means customer segments.</p>
+          <p className="text-xs text-slate-500">
+            Hybrid recommendations and K-Means customer segments.
+          </p>
         </div>
         <button type="button" onClick={run} disabled={loading} className="btn-primary">
           {loading ? "Running..." : "Run insights"}
@@ -58,6 +64,13 @@ const InsightsPanel = ({ products }) => {
             <h3 className="text-sm font-bold uppercase tracking-wide text-slate-500">
               Recommended products
             </h3>
+            <p className="text-[11px] text-slate-400">
+              {strategy === "hybrid_tfidf_popularity"
+                ? `${
+                    recommendationScope === "aggregate" ? "Aggregate demand profile" : "Customer purchase profile"
+                  }: 75% content similarity + 25% popularity, diversified by category`
+                : "Popularity-based ranking"}
+            </p>
             {recommendations.length ? (
               <ul className="mt-2 space-y-1 text-sm">
                 {recommendations.slice(0, 5).map((entry) => (
@@ -78,7 +91,21 @@ const InsightsPanel = ({ products }) => {
             <h3 className="text-sm font-bold uppercase tracking-wide text-slate-500">
               Customer segments
             </h3>
-            {Object.keys(segmentCounts).length ? (
+            <p className="text-[11px] text-slate-400">
+              K-Means, standardized features{clusterCount ? `, k=${clusterCount}` : ""}
+            </p>
+            {segmentSummary.length ? (
+              <ul className="mt-2 space-y-1 text-sm">
+                {segmentSummary.map((entry) => (
+                  <li key={entry.segment} className="flex items-center justify-between gap-2">
+                    <span className="truncate text-slate-700">{entry.label}</span>
+                    <span className="text-xs text-slate-500">
+                      {entry.customers} customer(s) · ${Math.round(entry.avg_order_value)} avg
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : Object.keys(segmentCounts).length ? (
               <ul className="mt-2 space-y-1 text-sm">
                 {Object.entries(segmentCounts).map(([segment, count]) => (
                   <li key={segment} className="flex items-center justify-between gap-2">

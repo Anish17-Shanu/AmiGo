@@ -28,5 +28,8 @@ export const env = {
   analyticsServiceUrl: process.env.ANALYTICS_SERVICE_URL || "http://localhost:8000",
   analyticsTimeoutMs: Number(process.env.ANALYTICS_TIMEOUT_MS || 3000),
   rateLimitWindowMs: Number(process.env.RATE_LIMIT_WINDOW_MS || 900000),
-  rateLimitMax: Number(process.env.RATE_LIMIT_MAX || 300)
+  rateLimitMax: Number(process.env.RATE_LIMIT_MAX || 300),
+  seedDemoData: process.env.SEED_DEMO_DATA
+    ? process.env.SEED_DEMO_DATA === "true"
+    : !isProduction
 };

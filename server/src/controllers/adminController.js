@@ -68,7 +68,10 @@ export const updateUserRole = catchAsync(async (req, res) => {
 });
 
 export const getAdvancedAnalytics = catchAsync(async (_req, res) => {
-  const [orders, products] = await Promise.all([Order.find(), Product.find()]);
+  const [orders, products] = await Promise.all([
+    Order.find({ status: { $ne: "cancelled" } }),
+    Product.find()
+  ]);
 
   const interactions = orders.flatMap((order) =>
     order.items.map((item) => ({
