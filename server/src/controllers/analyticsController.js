@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Product } from "../models/Product.js";
 import { Order } from "../models/Order.js";
 import { catchAsync } from "../utils/catchAsync.js";
@@ -17,11 +18,13 @@ export const personalizedRecommendations = catchAsync(async (req, res) => {
     user_id: String(req.user._id)
   });
 
-  const recommendedIds = recommendationPayload.recommendations.map((entry) => entry.product_id);
-  const recommendedProducts = await Product.find({ _id: { $in: recommendedIds } });
+  const recommendedIds = (recommendationPayload.recommendations || [])
+    .map((entry) => String(entry?.product_id ?? ""))
+    .filter((id) => mongoose.isValidObjectId(id));
+  if (recommendedIds.length === 0) {
+    return res.json({ success: true, recommendations: [] });
+  }
 
-  res.json({
-    success: true,
-    recommendations: recommendedProducts
-  });
+  const recommendedProducts = await Product.find({ _id: { $in: recommendedIds } });
+  return res.json({ success: true, recommendations: recommendedProducts });
 });

@@ -1,22 +1,25 @@
 import axios from "axios";
 import { env } from "../config/env.js";
+import { logger } from "../config/logger.js";
 
 const analyticsClient = axios.create({
   baseURL: env.analyticsServiceUrl,
-  timeout: 7000
+  timeout: env.analyticsTimeoutMs
 });
 
-export const fetchRecommendations = async (payload) => {
-  const { data } = await analyticsClient.post("/recommend", payload);
-  return data;
+const safePost = async (path, payload, fallback) => {
+  try {
+    const { data } = await analyticsClient.post(path, payload);
+    return data;
+  } catch (error) {
+    logger.warn("Analytics request failed", { path, message: error.message });
+    return fallback;
+  }
 };
 
-export const fetchForecast = async (payload) => {
-  const { data } = await analyticsClient.post("/forecast", payload);
-  return data;
-};
+export const fetchRecommendations = (payload) =>
+  safePost("/recommend", payload, { recommendations: [] });
 
-export const fetchSegments = async (payload) => {
-  const { data } = await analyticsClient.post("/segment", payload);
-  return data;
-};
+export const fetchForecast = (payload) => safePost("/forecast", payload, { forecast: [] });
+
+export const fetchSegments = (payload) => safePost("/segment", payload, { segments: [] });

@@ -12,6 +12,11 @@ export const listProducts = catchAsync(async (req, res) => {
   res.json({ success: true, ...result });
 });
 
+export const listCategories = catchAsync(async (_req, res) => {
+  const categories = await Product.distinct("category");
+  res.json({ success: true, categories: categories.filter(Boolean).sort() });
+});
+
 export const getProductById = catchAsync(async (req, res) => {
   const product = await Product.findById(req.params.id);
   if (!product) throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");

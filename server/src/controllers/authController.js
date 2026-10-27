@@ -25,7 +25,7 @@ export const register = catchAsync(async (req, res) => {
 
 export const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select("+password");
   if (!user) throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid credentials");
 
   const isValid = await bcrypt.compare(password, user.password);
@@ -42,5 +42,14 @@ export const login = catchAsync(async (req, res) => {
 });
 
 export const profile = catchAsync(async (req, res) => {
-  res.json({ success: true, user: req.user });
+  res.json({
+    success: true,
+    user: {
+      id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      role: req.user.role,
+      lastActiveAt: req.user.lastActiveAt
+    }
+  });
 });

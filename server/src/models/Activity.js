@@ -9,4 +9,6 @@ const activitySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+activitySchema.index({ user: 1, createdAt: -1 });
+
 export const Activity = mongoose.model("Activity", activitySchema);

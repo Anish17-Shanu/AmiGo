@@ -1,11 +1,7 @@
 import { body } from "express-validator";
 
-export const createOrderValidator = [
-  body("items").isArray({ min: 1 }),
-  body("items.*.productId").isMongoId(),
-  body("items.*.quantity").isInt({ min: 1 })
-];
+const ORDER_STATUSES = ["pending", "processing", "shipped", "delivered", "cancelled"];
 
 export const updateOrderStatusValidator = [
-  body("status").isIn(["pending", "processing", "shipped", "delivered", "cancelled"])
+  body("status").isIn(ORDER_STATUSES).withMessage(`Status must be one of: ${ORDER_STATUSES.join(", ")}`)
 ];

@@ -1,4 +1,15 @@
-import { BarChart, Bar, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from "recharts";
 
 export const RevenueChart = ({ data }) => (
   <div className="card-glass rounded-2xl p-4">
@@ -10,7 +21,30 @@ export const RevenueChart = ({ data }) => (
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="total" stroke="#0ea5e9" strokeWidth={3} />
+        <Line type="monotone" dataKey="total" name="Revenue" stroke="#0ea5e9" strokeWidth={3} />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+);
+
+export const ForecastChart = ({ data }) => (
+  <div className="card-glass rounded-2xl p-4">
+    <h3 className="mb-3 font-display text-lg font-bold">7-Day Forecast</h3>
+    <ResponsiveContainer width="100%" height={260}>
+      <LineChart data={data}>
+        <CartesianGrid strokeDasharray="4 4" />
+        <XAxis dataKey="date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          dataKey="predicted_total"
+          name="Predicted revenue"
+          stroke="#f97316"
+          strokeDasharray="5 5"
+          strokeWidth={3}
+        />
       </LineChart>
     </ResponsiveContainer>
   </div>
@@ -25,7 +59,7 @@ export const TopProductsChart = ({ data }) => (
         <XAxis dataKey="title" />
         <YAxis />
         <Tooltip />
-        <Bar dataKey="totalSold" fill="#f97316" />
+        <Bar dataKey="totalSold" name="Units sold" fill="#f97316" />
       </BarChart>
     </ResponsiveContainer>
   </div>

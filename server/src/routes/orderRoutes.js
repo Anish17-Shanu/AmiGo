@@ -9,6 +9,7 @@ import {
 import { protect, authorize } from "../middleware/authMiddleware.js";
 import { validate } from "../middleware/validateMiddleware.js";
 import { updateOrderStatusValidator } from "../validators/orderValidators.js";
+import { idParamValidator } from "../validators/authValidators.js";
 
 const router = express.Router();
 
@@ -16,6 +17,14 @@ router.post("/checkout", protect, checkout);
 router.get("/my", protect, listMyOrders);
 router.get("/trending", listTrendingProducts);
 router.get("/", protect, authorize("admin"), listAllOrders);
-router.patch("/:id/status", protect, authorize("admin"), updateOrderStatusValidator, validate, updateOrderStatus);
+router.patch(
+  "/:id/status",
+  protect,
+  authorize("admin"),
+  idParamValidator,
+  updateOrderStatusValidator,
+  validate,
+  updateOrderStatus
+);
 
 export default router;

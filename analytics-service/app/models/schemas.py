@@ -1,24 +1,28 @@
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 from typing import List, Optional
 
 
 class Interaction(BaseModel):
     user_id: str
     product_id: str
-    quantity: int = 1
+    quantity: int = Field(default=1, ge=1)
 
 
 class ProductPayload(BaseModel):
-    _id: Optional[str] = None
-    id: Optional[str] = None
+    model_config = ConfigDict(populate_by_name=True)
+
+    product_id: Optional[str] = Field(
+        default=None,
+        validation_alias=AliasChoices("_id", "id", "product_id"),
+    )
     title: str
     category: str
     tags: List[str] = []
 
 
 class RecommendRequest(BaseModel):
-    interactions: List[Interaction] = []
-    products: List[ProductPayload] = []
+    interactions: List[Interaction] = Field(default_factory=list, max_length=10000)
+    products: List[ProductPayload] = Field(default_factory=list, max_length=5000)
     user_id: Optional[str] = None
 
 
@@ -28,7 +32,7 @@ class SalesPoint(BaseModel):
 
 
 class ForecastRequest(BaseModel):
-    sales_series: List[SalesPoint]
+    sales_series: List[SalesPoint] = Field(default_factory=list, max_length=3660)
     horizon_days: int = Field(default=7, ge=1, le=30)
 
 
@@ -39,5 +43,5 @@ class CustomerPoint(BaseModel):
 
 
 class SegmentRequest(BaseModel):
-    customers: List[CustomerPoint]
+    customers: List[CustomerPoint] = Field(default_factory=list, max_length=10000)
     n_clusters: int = Field(default=3, ge=2, le=6)
