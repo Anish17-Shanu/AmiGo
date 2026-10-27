@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: amigo-analytics
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./analytics-service/Dockerfile
+    dockerContext: ./analytics-service
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+
+  - type: web
+    name: amigo-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    healthCheckPath: /api/v1/health/ready
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLIENT_URL
+        sync: false
+      - key: ANALYTICS_SERVICE_URL
+        fromService:
+          type: web
+          name: amigo-analytics
+          property: hostport
+      - key: ANALYTICS_TIMEOUT_MS
+        value: "8000"
+      - key: RATE_LIMIT_MAX
+        value: "600"
+      - key: SEED_DEMO_DATA
+        value: "true"
