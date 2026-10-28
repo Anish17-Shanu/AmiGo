@@ -17,3 +17,6 @@ client/dist
 # Logs
 logs
 *.log
+
+# Vercel
+.vercel
