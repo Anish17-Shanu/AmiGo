@@ -20,3 +20,6 @@ logs
 
 # Vercel
 .vercel
+
+.vercel
+.env*
